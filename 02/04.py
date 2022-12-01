@@ -1,13 +1,13 @@
 import cv2
 import MJFunction
 
-src = cv2.imread('03_2.png', cv2.IMREAD_GRAYSCALE)
+src = cv2.imread('04.png', cv2.IMREAD_GRAYSCALE)
 dice_list = []
 ans = [] 
-
+MJFunction.showImg(src)
 #이진화 필요
-src_bin = MJFunction.binImg_03(src)
-
+src_bin = MJFunction.binImg_04(src)
+MJFunction.showImg(src_bin)
 #labeling
 dice_list = MJFunction.labelingImg(src_bin)
 

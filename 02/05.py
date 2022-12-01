@@ -1,7 +1,7 @@
 import cv2
 import MJFunction
 
-src = cv2.imread('04_6.png', cv2.IMREAD_COLOR)
+src = cv2.imread('05_1.png', cv2.IMREAD_COLOR)
 dice_list = []
 ans = [] 
 MJFunction.showImg(src)

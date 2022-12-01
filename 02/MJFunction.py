@@ -1,6 +1,20 @@
 import cv2
 import numpy as np
 
+def blurring(src):
+    for ksize in range(3, 9, 2):
+        src = cv2.blur(src,(ksize,ksize))
+    return src
+
+def sharpening(src):
+    for sigma in range(1,6):
+        blurred = cv2.GaussianBlur(src, (0,0), sigma)
+
+        alpha = 1.0
+        src = cv2.addWeighted(src, 1+alpha, blurred, -alpha, 0.0)
+    return src
+
+
 def binImg_03(src) :
     alpha = 3.0
     dst = np.empty(src.shape, dtype=src.dtype)
@@ -17,12 +31,39 @@ def binImg_03(src) :
     return src_bin
 
 def binImg_04(src) :
-    showImg(src)
-    _, src_bin = cv2.threshold(src, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    src_blu = blurring(src)
+    #showImg(src_blu)
+
+    bgr_planes = cv2.split(src_blu)
+    _, src_bin_0 = cv2.threshold(bgr_planes[0], 155, 85, cv2.THRESH_BINARY )
+    _, src_bin_1 = cv2.threshold(bgr_planes[1], 155, 85, cv2.THRESH_BINARY )
+    _, src_bin_2 = cv2.threshold(bgr_planes[2], 155, 85, cv2.THRESH_BINARY )
     
-    src_bin = cv2.morphologyEx(src_bin, cv2.MORPH_OPEN, None)
-    src_bin = cv2.morphologyEx(src_bin, cv2.MORPH_CLOSE, None)
+    src_bin = src_bin_0 +  src_bin_1 + src_bin_2
+    #showImg(src_bin)
+    src_bin = cv2.dilate(src_bin, np.ones((3,3), np.uint8)) 
+    _, src_bin = cv2.threshold(src_bin, 180, 255, cv2.THRESH_BINARY )
+    #showImg(src_bin)
     
+    return src_bin
+
+def binImg_04_INV(src) :
+    src_blu = blurring(src)
+    #showImg(src_blu)
+
+    bgr_planes = cv2.split(src_blu)
+    _, src_bin_0 = cv2.threshold(bgr_planes[0], 155, 85, cv2.THRESH_BINARY)
+    _, src_bin_1 = cv2.threshold(bgr_planes[1], 155, 85, cv2.THRESH_BINARY)
+    _, src_bin_2 = cv2.threshold(bgr_planes[2], 155, 85, cv2.THRESH_BINARY)
+    
+    src_bin = src_bin_0 +  src_bin_1 + src_bin_2
+    #showImg(src_bin)
+    src_bin = cv2.dilate(src_bin, np.ones((3,3), np.uint8)) 
+    _, src_bin = cv2.threshold(src_bin, 254, 0, cv2.THRESH_TOZERO_INV )
+    _, src_bin = cv2.threshold(src_bin, 70, 255, cv2.THRESH_BINARY )
+    #showImg(src_bin)
+    
+
     return src_bin
 
 def saturated(value):
@@ -38,9 +79,12 @@ def labelingImg(src) :
     for i in range(1,cnt):
         (x, y, w, h, area) = stats[i]
 
-        if area < 20 :
+        if abs(w-h)>15 or area < 2500:
+            continue
+        if area < 100:
             continue
         tmp = src[y:y+h,x:x+w]
+        #showImg(tmp)
         dice_list.append(tmp)
     return dice_list
 
@@ -50,12 +94,14 @@ def labelingDice(src) :
     for i in range(1,cnt):
         (x, y, w, h, area) = stats[i]
 
-        if abs(w-h)>20 or area > 800:
+        if abs(w-h)>15 or area > 700:
             continue
-        if area < 100:
+        if area < 200:
             continue
         tmp = src[y:y+h,x:x+w]
-        dice_list.append(tmp)
+        cnt_test, _, _, _ = cv2.connectedComponentsWithStats(tmp)
+        if cnt_test == 2:
+            dice_list.append(tmp)
     return dice_list
 
 def getDiceNumber(dice_list) :

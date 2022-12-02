@@ -1,17 +1,19 @@
 import cv2
 import MJFunction
 
-src = cv2.imread('03_2.png', cv2.IMREAD_GRAYSCALE)
+src = cv2.imread('case3/03_2.png', cv2.IMREAD_GRAYSCALE)
 dice_list = []
 ans = [] 
 
-#이진화 필요
+#binalization
 src_bin = MJFunction.binImg_03(src)
 
-#labeling
+#dice labeling
 dice_list = MJFunction.labelingImg(src_bin)
 
-#getDiceNumberList
+#getnumber from dice
 dice_ans_list = MJFunction.getDiceNumber(dice_list)
+
+#sort & print
 dice_ans_list.sort()
 print("dice : ", dice_ans_list)

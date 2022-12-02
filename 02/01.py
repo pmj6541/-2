@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-src = cv2.imread('01.png', cv2.IMREAD_GRAYSCALE)
+src = cv2.imread('case1/01.png', cv2.IMREAD_GRAYSCALE)
 _, src_bin = cv2.threshold(src, 0, 80, cv2.THRESH_BINARY | cv2.THRESH_TRIANGLE)
 cnt, labels, stats, centroids = cv2.connectedComponentsWithStats(src_bin)
 dst = cv2.cvtColor(src, cv2.COLOR_GRAY2BGR)

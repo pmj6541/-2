@@ -14,6 +14,13 @@ def sharpening(src):
         src = cv2.addWeighted(src, 1+alpha, blurred, -alpha, 0.0)
     return src
 
+def saturated(value):
+    if value > 255:
+        value = 255
+    elif value < 0:
+        value = 0
+    return value
+
 
 def binImg_03(src) :
     alpha = 3.0
@@ -52,9 +59,9 @@ def binImg_04_INV(src) :
     #showImg(src_blu)
 
     bgr_planes = cv2.split(src_blu)
-    _, src_bin_0 = cv2.threshold(bgr_planes[0], 155, 85, cv2.THRESH_BINARY)
-    _, src_bin_1 = cv2.threshold(bgr_planes[1], 155, 85, cv2.THRESH_BINARY)
-    _, src_bin_2 = cv2.threshold(bgr_planes[2], 155, 85, cv2.THRESH_BINARY)
+    _, src_bin_0 = cv2.threshold(bgr_planes[0], 155, 85, cv2.THRESH_BINARY )
+    _, src_bin_1 = cv2.threshold(bgr_planes[1], 155, 85, cv2.THRESH_BINARY )
+    _, src_bin_2 = cv2.threshold(bgr_planes[2], 155, 85, cv2.THRESH_BINARY )
     
     src_bin = src_bin_0 +  src_bin_1 + src_bin_2
     #showImg(src_bin)
@@ -62,16 +69,9 @@ def binImg_04_INV(src) :
     _, src_bin = cv2.threshold(src_bin, 254, 0, cv2.THRESH_TOZERO_INV )
     _, src_bin = cv2.threshold(src_bin, 70, 255, cv2.THRESH_BINARY )
     #showImg(src_bin)
-    
 
     return src_bin
 
-def saturated(value):
-    if value > 255:
-        value = 255
-    elif value < 0:
-        value = 0
-    return value
 
 def labelingImg(src) :
     cnt, _, stats, _ = cv2.connectedComponentsWithStats(src)
@@ -84,7 +84,7 @@ def labelingImg(src) :
         if area < 100:
             continue
         tmp = src[y:y+h,x:x+w]
-        #showImg(tmp)
+        showImg(tmp)
         dice_list.append(tmp)
     return dice_list
 

@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 
 src = cv2.imread('case1/01.png', cv2.IMREAD_GRAYSCALE)
 _, src_bin = cv2.threshold(src, 0, 80, cv2.THRESH_BINARY | cv2.THRESH_TRIANGLE)

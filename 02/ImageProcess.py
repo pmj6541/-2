@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 
 def blurring(src):
     for ksize in range(3, 9, 2):

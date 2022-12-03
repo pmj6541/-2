@@ -1,6 +1,4 @@
 import cv2
-import numpy as np
-import ImageProcess
 
 def labelingImg_03_04(src) :
     cnt, _, stats, _ = cv2.connectedComponentsWithStats(src)

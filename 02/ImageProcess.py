@@ -5,14 +5,6 @@ def blurring(src):
         src = cv2.blur(src,(ksize,ksize))
     return src
 
-def sharpening(src):
-    for sigma in range(1,6):
-        blurred = cv2.GaussianBlur(src, (0,0), sigma)
-
-        alpha = 1.0
-        src = cv2.addWeighted(src, 1+alpha, blurred, -alpha, 0.0)
-    return src
-
 def saturated(value):
     if value > 255:
         value = 255

@@ -30,3 +30,6 @@ for i in range(1,cnt):
 ans.sort()
 print('dice : ',ans)
 
+cv2.imshow('dst',dst)
+cv2.waitKey()
+cv2.destroyAllWindows()

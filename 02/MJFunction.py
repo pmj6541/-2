@@ -72,6 +72,20 @@ def binImg_04_INV(src) :
 
     return src_bin
 
+def binImg_05(src) :
+    alpha = 3.0
+    for y in range(src.shape[0]):
+        for x in range(src.shape[1]):
+            src[y, x] = saturated(src[y, x] + (src[y, x]-180) * alpha)
+    
+    _, src_bin = cv2.threshold(src, 80, 255, cv2.THRESH_BINARY )
+    showImg(src)
+
+    src_bin = cv2.morphologyEx(src_bin, cv2.MORPH_OPEN, None)
+    src_bin = cv2.morphologyEx(src_bin, cv2.MORPH_CLOSE, None)
+    
+    return src_bin
+
 
 def labelingImg(src) :
     cnt, _, stats, _ = cv2.connectedComponentsWithStats(src)
@@ -80,6 +94,21 @@ def labelingImg(src) :
         (x, y, w, h, area) = stats[i]
 
         if abs(w-h)>15 or area < 2500:
+            continue
+        if area < 100:
+            continue
+        tmp = src[y:y+h,x:x+w]
+        showImg(tmp)
+        dice_list.append(tmp)
+    return dice_list
+
+def labelingImg_05(src) :
+    cnt, _, stats, _ = cv2.connectedComponentsWithStats(src)
+    dice_list = []
+    for i in range(1,cnt):
+        (x, y, w, h, area) = stats[i]
+
+        if area < 10000:
             continue
         if area < 100:
             continue
@@ -102,6 +131,24 @@ def labelingDice(src) :
         cnt_test, _, _, _ = cv2.connectedComponentsWithStats(tmp)
         if cnt_test == 2:
             dice_list.append(tmp)
+            showImg(tmp)
+    return dice_list
+
+def labelingDice_05(src) : 
+    cnt, _, stats, _ = cv2.connectedComponentsWithStats(src)
+    dice_list = []
+    for i in range(1,cnt):
+        (x, y, w, h, area) = stats[i]
+
+        if abs(w-h)>15 or area > 2000:
+            continue
+        if area < 350:
+            continue
+        tmp = src[y:y+h,x:x+w]
+        cnt_test, _, _, _ = cv2.connectedComponentsWithStats(tmp)
+        if cnt_test == 2:
+            dice_list.append(tmp)
+            showImg(tmp)
     return dice_list
 
 def getDiceNumber(dice_list) :
@@ -109,6 +156,15 @@ def getDiceNumber(dice_list) :
     tmp_dice = []
     for i in range(len(dice_list)):
         tmp_dice = labelingDice(~dice_list[i])
+        if len(tmp_dice)<7 and len(tmp_dice)>0:
+            ans.append(len(tmp_dice)) 
+    return ans
+
+def getDiceNumber_05(dice_list) :
+    ans = []
+    tmp_dice = []
+    for i in range(len(dice_list)):
+        tmp_dice = labelingDice_05(~dice_list[i])
         if len(tmp_dice)<7 and len(tmp_dice)>0:
             ans.append(len(tmp_dice)) 
     return ans

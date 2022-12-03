@@ -24,6 +24,5 @@ for j in range(2,cnt_dice):
 print("dice : ",ans)
 
 cv2.imshow('dst',dst)
-
 cv2.waitKey()
 cv2.destroyAllWindows()

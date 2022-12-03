@@ -38,7 +38,7 @@ def labelingDice_05(src) :
         tmp = src[y:y+h,x:x+w]
         cnt_test, _, _, _ = cv2.connectedComponentsWithStats(tmp)
         if cnt_test == 2:
-            dice_list.append(tmp) 
+            dice_list.append(tmp)
     return dice_list
 
 def getDiceNumber_05(dice_list) :

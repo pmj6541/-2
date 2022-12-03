@@ -8,10 +8,9 @@ def labelingImg_03_04(src) :
 
         if abs(w-h)>15 or area < 2500:
             continue
-        if area < 100:
-            continue
         tmp = src[y:y+h,x:x+w]
         dice_list.append(tmp)
+
     return dice_list
 
 def labelingImg_05(src) :
@@ -22,8 +21,7 @@ def labelingImg_05(src) :
 
         if area < 10000:
             continue
-        if area < 100:
-            continue
         tmp = src[y:y+h,x:x+w]
         dice_list.append(tmp)
+
     return dice_list
